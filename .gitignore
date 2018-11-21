@@ -6,4 +6,5 @@ idea/
 # Java class files
 *.class
 
-
+# log files
+*.log

@@ -1,5 +1,6 @@
 package pl.edu.agh.tw.lab4.monitors;
 
+import java.util.logging.*;
 import static pl.edu.agh.tw.lab4.monitors.Main.*;
 
 public class Producer extends  Thread {
@@ -7,6 +8,7 @@ public class Producer extends  Thread {
         int x = randomGenerator.nextInt(M - 1) + 1;
 
         //start timer
+        long startTime = System.nanoTime();
 
         synchronized (buffer) {
             while (!buffer.managedToInsert(x) && buffer.thereAreConsumers()) {
@@ -17,22 +19,15 @@ public class Producer extends  Thread {
                     e.printStackTrace();
                 }
             }
-            //notify that you inserted
-            if (buffer.thereAreConsumers())
-            {
-                System.out.println("Produced " + x + " items, " + Thread.currentThread());
-            }else{
-                System.out.println("Didn't produce "+x+" items, "+Thread.currentThread());
-            }
 
-            System.out.println("Finished producing, "+(Thread.currentThread()));
+            long endTime = System.nanoTime();
+            //notify that you inserted
+            logger.fine("Produced " + x + " items, " + Thread.currentThread());
             //let consumers know that you may be the last producer
             buffer.quitProducing();
             buffer.notifyAll();
+            P_time+=endTime-startTime;
+            logger.info("Producer: "+ Thread.currentThread() +" "+ (endTime- startTime));
         }
-
-        System.out.println("Finished producing, "+(Thread.currentThread()));
     }
-
-
 }

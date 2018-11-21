@@ -3,6 +3,8 @@ package pl.edu.agh.tw.lab4.monitors;
 //import java.util.Random;
 
 
+import static pl.edu.agh.tw.lab4.monitors.Main.logger;
+
 public class Buffer {
     //private int array[];
     private int ItemsLeft = 0;
@@ -15,8 +17,8 @@ public class Buffer {
        // Random randomGenerator = new Random();
         //array = randomGenerator.ints(2*bufferSize).toArray();
         this.bufferSize = 2*M;
-        this.consumersCount = m;
-        this.producersCount = n;
+        this.producersCount = m;
+        this.consumersCount = n;
     }
 
    /* public synchronized int getItemsLeft() {
@@ -28,7 +30,7 @@ public class Buffer {
     public boolean managedToInsert(int n){
         if(ItemsLeft+n<=bufferSize){
             ItemsLeft+=n;
-            System.out.println("Inserted "+n+" into buffer. Number of items: "+ItemsLeft);
+            logger.fine("Inserted "+n+" into buffer. Number of items: "+ItemsLeft + " P: "+producersCount+" C: "+consumersCount);
             return true;
         }
         else{
@@ -40,7 +42,7 @@ public class Buffer {
     public boolean managedToConsume(int n){
         if(ItemsLeft-n>=0){
             ItemsLeft-=n;
-            System.out.println("Consumed "+n+" from buffer. Number of items: "+ItemsLeft);
+            logger.fine("Consumed "+n+" from buffer. Number of items: "+ItemsLeft+ " P: "+producersCount+" C: "+consumersCount);
             return true;
         }
         else{
@@ -60,7 +62,7 @@ public class Buffer {
         producersCount--;
     }
 
-    public void quitConsuming(){
+    public void quitConsuming(){ consumersCount--;
 
     }
 

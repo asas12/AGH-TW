@@ -9,6 +9,7 @@ public class Consumer extends Thread{
         int x = randomGenerator.nextInt(M-1)+1;
 
         //start timer
+        long startTime = System.nanoTime();
 
         synchronized(buffer) {
             while (!buffer.managedToConsume(x) && buffer.thereAreProducers()) {
@@ -19,17 +20,19 @@ public class Consumer extends Thread{
                     e.printStackTrace();
                 }
             }
-            if(buffer.thereAreProducers()) {
-                System.out.println("Consumed " + x + " items, " + Thread.currentThread());
-            }else
-            {
-                System.out.println("Didn't consume " + x + " items, " + Thread.currentThread());
-            }
 
-            System.out.println("Finished consuming, "+(Thread.currentThread()));
+            long endTime = System.nanoTime();
+            logger.fine("Consumed or tried to consume " + x + " items, " + Thread.currentThread());
+
             buffer.quitConsuming();
             buffer.notifyAll();
+
+            C_time+=endTime-startTime;
+            logger.info("Consumer: "+ Thread.currentThread() +" "+ (endTime - startTime));
+
         }
-        System.out.println("Finished consuming, "+(Thread.currentThread()));
+
+
+
     }
 }
